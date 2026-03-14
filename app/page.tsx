@@ -1,4 +1,6 @@
+import AutoRefresh from "../components/AutoRefresh";
 import LiveClocks from "../components/LiveClocks";
+import { getPumpWatchDashboardData } from "../lib/pump-watch/dashboard";
 
 type SignalTone = "up" | "down" | "warning" | "flat";
 
@@ -18,14 +20,6 @@ type InventoryWindow = {
   reading: string;
   detail: string;
   status: SignalTone;
-};
-
-type PumpPrice = {
-  city: string;
-  regular: string;
-  premium: string;
-  diesel: string;
-  updated: string;
 };
 
 type FlowStage = {
@@ -62,17 +56,6 @@ type BufferMetric = {
   tag: string;
   status: SignalTone;
 };
-
-type CommunitySpread = {
-  city: string;
-  submissions: number;
-  low: string;
-  high: string;
-  spread: string;
-  status: SignalTone;
-};
-
-const screenSnapshot = "14 Mar 2026";
 
 const markets: Market[] = [
   {
@@ -250,44 +233,6 @@ const tankerRoutes: TankerRoute[] = [
   },
 ];
 
-const pumpWatch: PumpPrice[] = [
-  {
-    city: "Auckland",
-    regular: "$2.71",
-    premium: "$2.94",
-    diesel: "$1.98",
-    updated: "11m",
-  },
-  {
-    city: "Wellington",
-    regular: "$2.76",
-    premium: "$2.99",
-    diesel: "$2.02",
-    updated: "17m",
-  },
-  {
-    city: "Christchurch",
-    regular: "$2.69",
-    premium: "$2.91",
-    diesel: "$1.95",
-    updated: "8m",
-  },
-  {
-    city: "Tauranga",
-    regular: "$2.73",
-    premium: "$2.96",
-    diesel: "$1.99",
-    updated: "22m",
-  },
-  {
-    city: "Dunedin",
-    regular: "$2.74",
-    premium: "$2.97",
-    diesel: "$2.01",
-    updated: "29m",
-  },
-];
-
 const stockCover: StockCover[] = [
   { name: "Japan", days: 160, tone: "strong" },
   { name: "USA", days: 92, tone: "medium" },
@@ -303,53 +248,21 @@ const bufferMetrics: BufferMetric[] = [
   { label: "FX drag", value: "-0.4%", tag: "NZD/USD", status: "down" },
 ];
 
-const communitySpread: CommunitySpread[] = [
-  {
-    city: "Auckland",
-    submissions: 34,
-    low: "$2.69",
-    high: "$2.83",
-    spread: "$0.14",
-    status: "warning",
-  },
-  {
-    city: "Wellington",
-    submissions: 28,
-    low: "$2.72",
-    high: "$2.89",
-    spread: "$0.17",
-    status: "warning",
-  },
-  {
-    city: "Christchurch",
-    submissions: 21,
-    low: "$2.66",
-    high: "$2.78",
-    spread: "$0.12",
-    status: "flat",
-  },
-  {
-    city: "Tauranga",
-    submissions: 19,
-    low: "$2.70",
-    high: "$2.84",
-    spread: "$0.14",
-    status: "warning",
-  },
-  {
-    city: "Dunedin",
-    submissions: 12,
-    low: "$2.71",
-    high: "$2.86",
-    spread: "$0.15",
-    status: "warning",
-  },
-];
-
 const maxDays = Math.max(...stockCover.map((entry) => entry.days));
 const soonestTanker = tankerRoutes.reduce((soonest, tanker) =>
   tanker.days < soonest.days ? tanker : soonest,
 );
+
+export const dynamic = "force-dynamic";
+
+function formatScreenSnapshot() {
+  return new Intl.DateTimeFormat("en-NZ", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+    timeZone: "Pacific/Auckland",
+  }).format(new Date());
+}
 
 function statusClass(status: SignalTone) {
   if (status === "up") return "is-up";
@@ -372,9 +285,13 @@ function priceDirection(status: SignalTone) {
   return "•";
 }
 
-export default function HomePage() {
+export default async function HomePage() {
+  const pumpWatchData = await getPumpWatchDashboardData();
+  const screenSnapshot = formatScreenSnapshot();
+
   return (
     <main className="page-shell">
+      <AutoRefresh />
       <div className="page-grid-overlay" />
       <section className="dashboard">
         <header className="top-strip panel">
@@ -512,9 +429,11 @@ export default function HomePage() {
             <div className="panel-header">
               <div>
                 <p className="section-code">NZ PUMP WATCH</p>
-                <h2 className="panel-title">Community fuel prices by city</h2>
+                <h2 className="panel-title">Auto pump prices by city</h2>
               </div>
-              <span className="market-tag is-neutral">Retail feed</span>
+              <span className="market-tag is-neutral">
+                {pumpWatchData.pumpWatchBadge}
+              </span>
             </div>
 
             <div className="table-wrap">
@@ -529,7 +448,7 @@ export default function HomePage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {pumpWatch.map((row) => (
+                  {pumpWatchData.pumpWatchRows.map((row) => (
                     <tr key={row.city}>
                       <td>{row.city}</td>
                       <td className="mono-value">{row.regular}</td>
@@ -808,10 +727,12 @@ export default function HomePage() {
           <section className="panel span-4">
             <div className="panel-header">
               <div>
-                <p className="section-code">COMMUNITY PRICES</p>
-                <h2 className="panel-title">Crowd spread by city</h2>
+                <p className="section-code">CITY PRICE SPREAD</p>
+                <h2 className="panel-title">Latest spread from pipeline</h2>
               </div>
-              <span className="market-tag is-neutral">User-submitted</span>
+              <span className="market-tag is-neutral">
+                {pumpWatchData.communityBadge}
+              </span>
             </div>
 
             <div className="table-wrap">
@@ -826,7 +747,7 @@ export default function HomePage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {communitySpread.map((row) => (
+                  {pumpWatchData.spreadRows.map((row) => (
                     <tr key={row.city}>
                       <td>{row.city}</td>
                       <td className="mono-soft">{row.submissions}</td>
