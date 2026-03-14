@@ -1,3 +1,5 @@
+import LiveClocks from "../components/LiveClocks";
+
 type SignalTone = "up" | "down" | "warning" | "flat";
 
 type Market = {
@@ -413,6 +415,8 @@ export default function HomePage() {
                 </p>
               </div>
             </div>
+
+            <LiveClocks />
 
             <div className="strip-meta">
               <div className="meta-row">
