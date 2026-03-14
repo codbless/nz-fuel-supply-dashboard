@@ -28,11 +28,16 @@ type StockCover = {
 };
 
 type TankerRoute = {
+  vessel: string;
   route: string;
   cargo: string;
   eta: string;
+  etaBadge: string;
+  days: number;
   top: string;
   left: string;
+  path: string;
+  tone: "amber" | "mint" | "ice" | "rose";
 };
 
 const markets: Market[] = [
@@ -111,32 +116,52 @@ const importFlow = [
 
 const tankerRoutes: TankerRoute[] = [
   {
+    vessel: "MT Matuku",
     route: "Singapore -> Auckland",
     cargo: "Gasoline blendstock",
-    eta: "ETA 9 days",
-    top: "22%",
-    left: "20%",
+    eta: "Auckland arrival in 9 days",
+    etaBadge: "9d",
+    days: 9,
+    top: "33%",
+    left: "62%",
+    path: "M 590 214 C 646 225, 735 287, 856 382",
+    tone: "amber",
   },
   {
+    vessel: "MT Waitemata",
     route: "South Korea -> Tauranga",
     cargo: "ULSD cargo",
-    eta: "ETA 12 days",
-    top: "34%",
-    left: "35%",
+    eta: "Tauranga arrival in 12 days",
+    etaBadge: "12d",
+    days: 12,
+    top: "22%",
+    left: "71%",
+    path: "M 676 152 C 744 176, 804 248, 858 382",
+    tone: "mint",
   },
   {
+    vessel: "MT Southern Current",
     route: "Strait of Malacca -> Lyttelton",
     cargo: "Jet / diesel split cargo",
-    eta: "ETA 16 days",
+    eta: "Lyttelton arrival in 16 days",
+    etaBadge: "16d",
+    days: 16,
     top: "48%",
-    left: "51%",
+    left: "58%",
+    path: "M 566 232 C 626 266, 720 346, 848 406",
+    tone: "ice",
   },
   {
+    vessel: "MT Tasman Dawn",
     route: "Tasman staging -> Marsden Point",
     cargo: "Coastal redistribution",
-    eta: "ETA 3 days",
-    top: "69%",
-    left: "74%",
+    eta: "Marsden Point arrival in 3 days",
+    etaBadge: "3d",
+    days: 3,
+    top: "60%",
+    left: "76%",
+    path: "M 748 343 C 785 343, 822 352, 856 378",
+    tone: "rose",
   },
 ];
 
@@ -187,6 +212,9 @@ const stockCover: StockCover[] = [
 ];
 
 const maxDays = Math.max(...stockCover.map((entry) => entry.days));
+const soonestTanker = tankerRoutes.reduce((soonest, tanker) =>
+  tanker.days < soonest.days ? tanker : soonest,
+);
 
 function signalClass(status: "up" | "down" | "flat") {
   if (status === "up") return "positive";
@@ -347,22 +375,92 @@ export default function HomePage() {
             <div className="section-header">
               <div>
                 <p className="eyebrow">NZ TANKER WATCH</p>
-                <h2>Map placeholder for ships heading to NZ</h2>
+                <h2>World map of tankers heading to New Zealand</h2>
               </div>
-              <span className="section-tag">Illustrative vessel routes</span>
+              <span className="section-tag">
+                Soonest ETA {soonestTanker.etaBadge} / {soonestTanker.vessel}
+              </span>
             </div>
 
             <div className="map-stage">
-              <div className="map-ocean-label">Indian Ocean / Pacific shipping lanes</div>
+              <div className="map-ocean-label">Asia-Pacific tanker approaches into NZ</div>
+              <svg
+                className="world-map-svg"
+                viewBox="0 0 1000 520"
+                role="img"
+                aria-label="World map showing tanker routes and ETAs heading to New Zealand"
+              >
+                <g className="world-landmass">
+                  <path
+                    className="world-land"
+                    d="M73 111l44-27 53-9 48 16 30 39 42 8 28 29-12 31-39 17-22 31-43 11-27 47-33-8-14-45-31-34-46-7-34-37 10-42 29-20-7-40 24-20z"
+                  />
+                  <path
+                    className="world-land"
+                    d="M275 301l39-19 34 16 24 47-17 61-32 61-27 14-23-30-7-46 10-46-22-27 21-31z"
+                  />
+                  <path
+                    className="world-land"
+                    d="M430 111l34-18 35 3 25 25-10 21-34 7-25-11-25 9-18-18 18-18z"
+                  />
+                  <path
+                    className="world-land"
+                    d="M428 149l27 8 36 1 35 14 52-1 35 17 40-7 36 19 42-4 77 22 48 38-15 25-40 17-47 0-21 22-39 6-30 42-46 19-38-6-33-41-25-4-34 23-24-15 0-39-22-35-38-52-17-58 7-51 34-18z"
+                  />
+                  <path
+                    className="world-land"
+                    d="M492 253l31 23 10 45 16 38-9 56-39 32-45-18-28-56-8-45 22-35 11-40 39 0z"
+                  />
+                  <path
+                    className="world-land"
+                    d="M748 347l42-7 44 13 31 31-10 26-53 3-34-15-28-25 8-26z"
+                  />
+                  <path
+                    className="world-land"
+                    d="M870 390l18 9 10 18-13 18-22-6-1-17 8-22z"
+                  />
+                  <path
+                    className="world-land"
+                    d="M896 423l9 7-4 11-12 1-2-10 9-9z"
+                  />
+                </g>
+
+                <g className="world-routes">
+                  {tankerRoutes.map((route) => (
+                    <path
+                      key={route.route}
+                      d={route.path}
+                      className={`world-route ${route.tone}`}
+                      pathLength={100}
+                    />
+                  ))}
+                </g>
+
+                <g className="world-target">
+                  <circle className="world-target-pulse" cx="878" cy="407" r="22" />
+                  <circle className="world-target-core" cx="878" cy="407" r="7" />
+                  <text className="world-target-label" x="903" y="402">
+                    NEW ZEALAND
+                  </text>
+                  <text className="world-target-subtitle" x="903" y="424">
+                    Auckland / Tauranga / Lyttelton / Marsden Point
+                  </text>
+                </g>
+              </svg>
+
               {tankerRoutes.map((route) => (
                 <div
-                  className="route-marker"
-                  key={route.route}
+                  className={`route-marker ${route.tone}`}
+                  key={route.vessel}
                   style={{ top: route.top, left: route.left }}
                 >
                   <span className="route-dot" />
                   <div className="route-card">
-                    <strong>{route.route}</strong>
+                    <div className="route-card-header">
+                      <strong>{route.vessel}</strong>
+                      <span className={`eta-pill ${route.tone}`}>{route.etaBadge}</span>
+                    </div>
+                    <span className="route-name">{route.route}</span>
                     <span>{route.cargo}</span>
                     <span>{route.eta}</span>
                   </div>

@@ -411,11 +411,11 @@ h2 {
 
 .map-stage {
   position: relative;
-  min-height: 360px;
+  min-height: 520px;
   border-radius: 22px;
   background:
-    radial-gradient(circle at 65% 30%, rgba(71, 223, 141, 0.12), transparent 18%),
-    radial-gradient(circle at 38% 46%, rgba(255, 176, 67, 0.12), transparent 18%),
+    radial-gradient(circle at 74% 34%, rgba(71, 223, 141, 0.12), transparent 18%),
+    radial-gradient(circle at 59% 50%, rgba(255, 176, 67, 0.12), transparent 22%),
     linear-gradient(180deg, rgba(8, 28, 43, 0.92), rgba(4, 12, 19, 0.96));
   border: 1px solid rgba(255, 255, 255, 0.08);
 }
@@ -432,11 +432,19 @@ h2 {
   opacity: 0.7;
 }
 
+.map-stage::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(4, 10, 16, 0.02), rgba(4, 10, 16, 0.3));
+  pointer-events: none;
+}
+
 .map-ocean-label {
   position: absolute;
   top: 18px;
   left: 20px;
-  z-index: 1;
+  z-index: 2;
   color: rgba(255, 255, 255, 0.56);
   font-family: "IBM Plex Mono", "SFMono-Regular", "Menlo", monospace;
   font-size: 0.72rem;
@@ -444,38 +452,195 @@ h2 {
   text-transform: uppercase;
 }
 
+.world-map-svg {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+}
+
+.world-land {
+  fill: rgba(123, 146, 173, 0.16);
+  stroke: rgba(173, 190, 211, 0.18);
+  stroke-width: 1.4;
+}
+
+.world-route {
+  fill: none;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-dasharray: 7 10;
+  animation: routeFlow 14s linear infinite;
+  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.12));
+}
+
+.world-route.amber {
+  stroke: rgba(255, 176, 67, 0.92);
+}
+
+.world-route.mint {
+  stroke: rgba(71, 223, 141, 0.9);
+}
+
+.world-route.ice {
+  stroke: rgba(126, 196, 255, 0.9);
+}
+
+.world-route.rose {
+  stroke: rgba(255, 119, 162, 0.88);
+}
+
+.world-target-pulse {
+  fill: rgba(255, 176, 67, 0.12);
+  stroke: rgba(255, 176, 67, 0.34);
+  stroke-width: 1.5;
+}
+
+.world-target-core {
+  fill: var(--accent);
+  filter: drop-shadow(0 0 10px rgba(255, 176, 67, 0.5));
+}
+
+.world-target-label,
+.world-target-subtitle {
+  font-family: "IBM Plex Mono", "SFMono-Regular", "Menlo", monospace;
+}
+
+.world-target-label {
+  fill: rgba(255, 255, 255, 0.9);
+  font-size: 17px;
+  letter-spacing: 0.12em;
+}
+
+.world-target-subtitle {
+  fill: rgba(151, 165, 186, 0.95);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+}
+
 .route-marker {
   position: absolute;
-  z-index: 1;
-  display: flex;
-  align-items: start;
-  gap: 10px;
+  z-index: 2;
+  display: grid;
+  justify-items: center;
+  gap: 12px;
+  transform: translate(-50%, -50%);
 }
 
 .route-dot {
-  width: 12px;
-  height: 12px;
-  margin-top: 8px;
+  width: 14px;
+  height: 14px;
   border-radius: 50%;
   background: var(--accent);
-  box-shadow: 0 0 0 6px rgba(255, 176, 67, 0.18);
+  box-shadow: 0 0 0 6px rgba(255, 176, 67, 0.16);
+  animation: vesselPulse 2.4s ease-in-out infinite;
+}
+
+.route-marker.amber .route-dot {
+  background: #ffb043;
+  box-shadow: 0 0 0 6px rgba(255, 176, 67, 0.16);
+}
+
+.route-marker.mint .route-dot {
+  background: #47df8d;
+  box-shadow: 0 0 0 6px rgba(71, 223, 141, 0.14);
+}
+
+.route-marker.ice .route-dot {
+  background: #7ec4ff;
+  box-shadow: 0 0 0 6px rgba(126, 196, 255, 0.14);
+}
+
+.route-marker.rose .route-dot {
+  background: #ff77a2;
+  box-shadow: 0 0 0 6px rgba(255, 119, 162, 0.14);
 }
 
 .route-card {
   display: grid;
   gap: 4px;
-  min-width: 180px;
+  min-width: 208px;
   padding: 12px 14px;
   border-radius: 14px;
   color: #fefefe;
-  background: rgba(4, 9, 16, 0.84);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(8px);
+  background: rgba(4, 9, 16, 0.88);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 16px 30px rgba(0, 0, 0, 0.3);
+}
+
+.route-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.eta-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 46px;
+  padding: 6px 9px;
+  border-radius: 999px;
+  font-family: "IBM Plex Mono", "SFMono-Regular", "Menlo", monospace;
+  font-size: 0.74rem;
+  letter-spacing: 0.08em;
+}
+
+.eta-pill.amber {
+  color: #ffd79a;
+  background: rgba(255, 176, 67, 0.14);
+}
+
+.eta-pill.mint {
+  color: #9cf2c3;
+  background: rgba(71, 223, 141, 0.14);
+}
+
+.eta-pill.ice {
+  color: #b5deff;
+  background: rgba(126, 196, 255, 0.14);
+}
+
+.eta-pill.rose {
+  color: #ffc0d2;
+  background: rgba(255, 119, 162, 0.14);
+}
+
+.route-name {
+  color: rgba(255, 255, 255, 0.86);
+  font-family: "IBM Plex Mono", "SFMono-Regular", "Menlo", monospace;
+  font-size: 0.78rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
 }
 
 .route-card span {
   color: var(--muted);
   font-size: 0.84rem;
+}
+
+@keyframes routeFlow {
+  from {
+    stroke-dashoffset: 0;
+  }
+
+  to {
+    stroke-dashoffset: -170;
+  }
+}
+
+@keyframes vesselPulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.15);
+  }
 }
 
 .table-wrap {
@@ -571,6 +736,14 @@ tbody td:nth-child(4) {
   }
 
   .route-card {
-    min-width: 150px;
+    min-width: 176px;
+  }
+
+  .world-target-label {
+    font-size: 14px;
+  }
+
+  .world-target-subtitle {
+    font-size: 10px;
   }
 }
