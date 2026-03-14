@@ -837,6 +837,36 @@ a {
   line-height: 1.45;
 }
 
+.buffer-alert {
+  display: grid;
+  gap: 4px;
+  padding: 10px 12px;
+  border: 1px solid rgba(255, 179, 71, 0.24);
+  background: rgba(255, 179, 71, 0.06);
+}
+
+.buffer-alert-label {
+  color: var(--warning);
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.buffer-alert p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.74rem;
+  line-height: 1.35;
+}
+
+.buffer-alert strong {
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  line-height: 1.35;
+}
+
 .buffer-metrics {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));

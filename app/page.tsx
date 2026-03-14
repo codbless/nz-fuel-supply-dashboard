@@ -750,20 +750,26 @@ export default function HomePage() {
           <section className="panel span-4">
             <div className="panel-header">
               <div>
-                <p className="section-code">NZ BUFFER</p>
-                <h2 className="panel-title">Storage and arrivals</h2>
+                <p className="section-code">NZ STRATEGIC FUEL BUFFER</p>
+                <h2 className="panel-title">Current estimate: ~30 days</h2>
               </div>
-              <span className="market-tag is-warning">30d cover</span>
+              <span className="market-tag is-warning">~30d est</span>
             </div>
 
             <div className="buffer-panel">
               <div className="buffer-hero">
-                <span className="buffer-hero-label">NZ storage buffer</span>
-                <strong>30 DAYS</strong>
+                <span className="buffer-hero-label">NZ Strategic Fuel Buffer</span>
+                <strong>~30 DAYS</strong>
                 <p>
-                  Buffer cover is functional but not generous. Arrival timing and
-                  FX pass-through remain the immediate risk variables.
+                  Current estimate: approximately 30 days of supply cover under
+                  current operating assumptions.
                 </p>
+              </div>
+
+              <div className="buffer-alert">
+                <span className="buffer-alert-label">Supply stress test</span>
+                <p>If tanker arrivals stopped today</p>
+                <strong>NZ supply would begin declining immediately.</strong>
               </div>
 
               <div className="buffer-metrics">
