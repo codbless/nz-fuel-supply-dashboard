@@ -51,6 +51,7 @@ type TankerRoute = {
   left: string;
   path: string;
   tone: "amber" | "mint" | "ice" | "rose";
+  align: "start" | "end";
 };
 
 type BufferMetric = {
@@ -198,6 +199,7 @@ const tankerRoutes: TankerRoute[] = [
     left: "60%",
     path: "M 590 214 C 646 225, 735 287, 856 382",
     tone: "amber",
+    align: "start",
   },
   {
     vessel: "MT Waitemata",
@@ -212,6 +214,7 @@ const tankerRoutes: TankerRoute[] = [
     left: "70%",
     path: "M 676 152 C 744 176, 804 248, 858 382",
     tone: "mint",
+    align: "end",
   },
   {
     vessel: "MT Southern Current",
@@ -226,6 +229,7 @@ const tankerRoutes: TankerRoute[] = [
     left: "57%",
     path: "M 566 232 C 626 266, 720 346, 848 406",
     tone: "ice",
+    align: "start",
   },
   {
     vessel: "MT Tasman Dawn",
@@ -240,6 +244,7 @@ const tankerRoutes: TankerRoute[] = [
     left: "75%",
     path: "M 748 343 C 785 343, 822 352, 856 378",
     tone: "rose",
+    align: "end",
   },
 ];
 
@@ -573,6 +578,9 @@ export default function HomePage() {
             <div className="tanker-layout">
               <div className="map-stage">
                 <div className="map-caption">Asia-Pacific tanker approaches into NZ</div>
+                <div className="map-region-label label-indian">INDIAN OCEAN</div>
+                <div className="map-region-label label-pacific">PACIFIC</div>
+                <div className="map-region-label label-australia">AUSTRALIA</div>
                 <svg
                   className="world-map-svg"
                   viewBox="0 0 1000 520"
@@ -636,17 +644,39 @@ export default function HomePage() {
 
                 {tankerRoutes.map((route) => (
                   <div
-                    className={`route-marker ${route.tone}`}
+                    className={`route-marker ${route.tone} ${route.align}`}
                     key={route.vessel}
                     style={{ top: route.top, left: route.left }}
                   >
                     <span className="route-dot" />
-                    <div className="route-chip">
-                      <strong>{route.short}</strong>
-                      <span>{route.etaBadge}</span>
+                    <div className="route-callout">
+                      <div className="route-callout-head">
+                        <strong>{route.vessel}</strong>
+                        <span className="route-eta-badge">{route.etaBadge}</span>
+                      </div>
+                      <span className="route-callout-destination">
+                        {route.destination} / {route.short}
+                      </span>
+                      <span className="route-callout-meta">{route.cargo}</span>
+                      <span className="route-callout-eta">{route.eta}</span>
                     </div>
                   </div>
                 ))}
+
+                <div className="map-summary-strip">
+                  <div className="map-summary-item">
+                    <span>Tracked vessels</span>
+                    <strong>{tankerRoutes.length}</strong>
+                  </div>
+                  <div className="map-summary-item">
+                    <span>Closest berth</span>
+                    <strong>{soonestTanker.destination}</strong>
+                  </div>
+                  <div className="map-summary-item">
+                    <span>Nearest ETA</span>
+                    <strong>{soonestTanker.etaBadge}</strong>
+                  </div>
+                </div>
               </div>
 
               <div className="table-wrap tanker-ledger">

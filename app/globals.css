@@ -566,6 +566,31 @@ a {
   text-transform: uppercase;
 }
 
+.map-region-label {
+  position: absolute;
+  z-index: 2;
+  color: rgba(139, 146, 161, 0.58);
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.label-indian {
+  top: 46%;
+  left: 20%;
+}
+
+.label-pacific {
+  top: 30%;
+  right: 12%;
+}
+
+.label-australia {
+  bottom: 25%;
+  left: 66%;
+}
+
 .world-map-svg {
   position: absolute;
   inset: 0;
@@ -625,8 +650,8 @@ a {
   position: absolute;
   z-index: 2;
   display: flex;
-  align-items: center;
-  gap: 6px;
+  align-items: flex-start;
+  gap: 7px;
   transform: translate(-50%, -50%);
 }
 
@@ -637,28 +662,65 @@ a {
   animation: vesselPulse 2.2s ease-in-out infinite;
 }
 
-.route-chip {
+.route-marker.end {
+  flex-direction: row-reverse;
+}
+
+.route-callout {
+  display: grid;
+  gap: 3px;
+  min-width: 126px;
+  padding: 6px 7px;
+  border: 1px solid var(--line-strong);
+  background: rgba(8, 11, 16, 0.95);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.24);
+}
+
+.route-callout-head {
   display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 4px 6px;
-  border: 1px solid var(--line-strong);
-  background: rgba(8, 11, 16, 0.94);
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.route-callout strong,
+.route-eta-badge,
+.route-callout-destination {
   font-family: var(--mono);
+}
+
+.route-callout strong {
+  color: var(--text);
+  font-size: 0.64rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.route-eta-badge {
+  color: var(--text);
+  font-size: 0.62rem;
+  letter-spacing: 0.08em;
+}
+
+.route-callout-destination {
+  color: #d9dde6;
   font-size: 0.62rem;
   letter-spacing: 0.06em;
   text-transform: uppercase;
 }
 
-.route-chip strong {
-  font-weight: 600;
+.route-callout-meta,
+.route-callout-eta {
+  color: var(--muted);
+  font-size: 0.64rem;
+  line-height: 1.3;
 }
 
 .route-marker.amber .route-dot {
   background: var(--warning);
 }
 
-.route-marker.amber .route-chip {
+.route-marker.amber .route-callout {
   color: #ffd79f;
   border-color: rgba(255, 179, 71, 0.28);
 }
@@ -667,7 +729,7 @@ a {
   background: var(--positive);
 }
 
-.route-marker.mint .route-chip {
+.route-marker.mint .route-callout {
   color: #9df0bf;
   border-color: rgba(46, 213, 115, 0.26);
 }
@@ -676,7 +738,7 @@ a {
   background: var(--ice);
 }
 
-.route-marker.ice .route-chip {
+.route-marker.ice .route-callout {
   color: #c2e4ff;
   border-color: rgba(126, 196, 255, 0.28);
 }
@@ -685,9 +747,42 @@ a {
   background: var(--rose);
 }
 
-.route-marker.rose .route-chip {
+.route-marker.rose .route-callout {
   color: #ffc0d2;
   border-color: rgba(255, 119, 162, 0.28);
+}
+
+.map-summary-strip {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  z-index: 2;
+  display: flex;
+  gap: 8px;
+}
+
+.map-summary-item {
+  display: grid;
+  gap: 2px;
+  min-width: 86px;
+  padding: 6px 8px;
+  border: 1px solid var(--line-strong);
+  background: rgba(8, 11, 16, 0.94);
+}
+
+.map-summary-item span {
+  color: var(--muted-strong);
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.map-summary-item strong {
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  font-weight: 600;
 }
 
 .tanker-ledger {
@@ -931,8 +1026,15 @@ a {
     min-height: 360px;
   }
 
-  .route-chip {
-    padding: 3px 5px;
+  .route-callout {
+    min-width: 110px;
+    padding: 5px 6px;
+  }
+
+  .map-summary-strip {
+    left: 10px;
+    right: 10px;
+    justify-content: space-between;
   }
 
   .world-target-label {
