@@ -358,53 +358,70 @@ function statusLabel(status: SignalTone) {
   return "FLAT";
 }
 
+function priceDirection(status: SignalTone) {
+  if (status === "down") return "▼";
+  if (status === "up") return "▲";
+  if (status === "warning") return "■";
+  return "•";
+}
+
 export default function HomePage() {
   return (
     <main className="page-shell">
       <div className="page-grid-overlay" />
       <section className="dashboard">
         <header className="top-strip panel">
-          <div className="screen-brand">
-            <span className="brand-code">NZFSD / LIVE MONITOR</span>
-            <div className="brand-copy">
-              <h1>NZ Fuel Supply Dashboard</h1>
-              <p>
-                Global markets {"->"} global supply {"->"} NZ imports {"->"} NZ
-                arrivals {"->"} NZ pump prices {"->"} NZ storage buffer
-              </p>
+          <div className="market-ribbon">
+            <div className="ribbon-label-block">
+              <span className="brand-code">LIVE MKT</span>
+              <strong className="ribbon-heading">{screenSnapshot}</strong>
             </div>
-          </div>
 
-          <div className="ticker-strip">
-            {markets.map((market) => (
-              <article className="ticker-item" key={market.code}>
-                <div className="ticker-head">
-                  <span className="ticker-code">{market.code}</span>
-                  <span className={`market-tag ${statusClass(market.status)}`}>
+            <div className="market-ribbon-track" aria-label="Global market ticker">
+              {markets.map((market) => (
+                <article className="ribbon-item" key={market.code}>
+                  <div className="ribbon-symbol">
+                    <span className="ticker-code">{market.code}</span>
+                    <span className="ribbon-name">{market.name}</span>
+                  </div>
+                  <div className="ribbon-quote">
+                    <strong className="ribbon-last">{market.value}</strong>
+                    <span className="ribbon-unit">{market.unit}</span>
+                  </div>
+                  <span className={`ribbon-change ${statusClass(market.status)}`}>
+                    <span aria-hidden="true">{priceDirection(market.status)}</span>
                     {market.change}
                   </span>
-                </div>
-                <div className="ticker-value-row">
-                  <strong className="ticker-value">{market.value}</strong>
-                  <span className="ticker-unit">{market.unit}</span>
-                </div>
-                <p className="ticker-label">{market.name}</p>
-              </article>
-            ))}
+                </article>
+              ))}
+            </div>
           </div>
 
-          <div className="strip-meta">
-            <div className="meta-row">
-              <span>Snapshot</span>
-              <strong>{screenSnapshot}</strong>
+          <div className="top-console">
+            <div className="screen-brand">
+              <span className="brand-code">NZFSD / LIVE MONITOR</span>
+              <div className="brand-copy">
+                <h1>NZ Fuel Supply Dashboard</h1>
+                <p>
+                  Global markets {"->"} global supply {"->"} NZ imports {"->"} NZ
+                  arrivals {"->"} NZ pump prices {"->"} NZ storage buffer
+                </p>
+              </div>
             </div>
-            <div className="meta-row">
-              <span>Mode</span>
-              <strong>Live Screen</strong>
-            </div>
-            <div className="meta-row">
-              <span>Alert</span>
-              <strong className="warning-text">NZ buffer 30d</strong>
+
+            <div className="strip-meta">
+              <div className="meta-row">
+                <span>Snapshot</span>
+                <strong>{screenSnapshot}</strong>
+              </div>
+              <div className="meta-row">
+                <span>Mode</span>
+                <strong>Live Screen</strong>
+              </div>
+              <div className="meta-row">
+                <span>Alert</span>
+                <strong className="warning-text">NZ buffer 30d</strong>
+              </div>
             </div>
           </div>
         </header>
