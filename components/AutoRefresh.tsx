@@ -2,13 +2,14 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import { dashboardRefreshMs } from "../lib/dashboard-config";
 
 type AutoRefreshProps = {
   intervalMs?: number;
 };
 
 export default function AutoRefresh({
-  intervalMs = 300_000,
+  intervalMs = dashboardRefreshMs,
 }: AutoRefreshProps) {
   const router = useRouter();
 

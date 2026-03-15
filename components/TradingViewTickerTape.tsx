@@ -2,13 +2,13 @@
 
 import Script from "next/script";
 import { createElement, useState } from "react";
+import { tradingViewTickerSymbols } from "../lib/dashboard-config";
 
 const widgetScriptSrc = "https://www.tradingview-widget.com/w/en/tv-ticker-tape.js";
 
-const tickerSymbols = ["OIL_BRENT", "USOIL", "USDNZD"];
-
 export default function TradingViewTickerTape() {
   const [hasScriptError, setHasScriptError] = useState(false);
+  const tickerSymbols = tradingViewTickerSymbols.map((entry) => entry.symbol);
 
   return (
     <div className="tradingview-ticker">
@@ -34,8 +34,8 @@ export default function TradingViewTickerTape() {
           className={`tradingview-loading ${hasScriptError ? "is-error" : ""}`}
           aria-live="polite"
         >
-          {tickerSymbols.map((symbol) => (
-            <span key={symbol}>{symbol}</span>
+          {tradingViewTickerSymbols.map((symbol) => (
+            <span key={symbol.symbol}>{symbol.symbol}</span>
           ))}
           <strong>
             {hasScriptError
