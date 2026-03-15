@@ -212,47 +212,11 @@ a {
   text-transform: uppercase;
 }
 
-.market-ribbon-track {
-  display: flex;
+.market-ribbon-widget {
   min-width: 0;
-  overflow-x: auto;
-  scrollbar-width: none;
+  padding: 0 10px;
 }
 
-.market-ribbon-track::-webkit-scrollbar {
-  display: none;
-}
-
-.ribbon-item {
-  flex: 1 0 220px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  min-width: 0;
-  padding: 8px 12px;
-  border-right: 1px solid var(--line);
-}
-
-.ribbon-symbol {
-  display: grid;
-  gap: 2px;
-  min-width: 96px;
-}
-
-.ribbon-name {
-  color: var(--text);
-  font-size: 0.72rem;
-  line-height: 1.2;
-}
-
-.ribbon-quote {
-  display: flex;
-  align-items: baseline;
-  gap: 6px;
-  min-width: 0;
-}
-
-.ribbon-last,
 .signal-value,
 .buffer-card-value,
 .buffer-hero strong,
@@ -263,12 +227,6 @@ a {
   font-family: var(--mono);
 }
 
-.ribbon-last {
-  font-size: 1rem;
-  line-height: 1;
-}
-
-.ribbon-unit,
 .inline-unit {
   color: var(--muted);
   font-family: var(--mono);
@@ -277,31 +235,52 @@ a {
   text-transform: uppercase;
 }
 
-.ribbon-change {
-  display: inline-flex;
+.tradingview-ticker {
+  position: relative;
+  min-width: 0;
+  padding: 6px 0 16px;
+}
+
+.tradingview-widget-container {
+  min-height: 32px;
+}
+
+.tradingview-widget-container__widget {
+  min-height: 32px;
+}
+
+.tradingview-loading {
+  display: flex;
   align-items: center;
-  gap: 4px;
-  margin-left: auto;
+  gap: 12px;
+  min-height: 32px;
+  color: var(--muted-strong);
   font-family: var(--mono);
-  font-size: 0.7rem;
+  font-size: 0.64rem;
   letter-spacing: 0.08em;
+  text-transform: uppercase;
   white-space: nowrap;
 }
 
-.ribbon-change.is-up {
-  color: var(--positive);
+.tradingview-loading strong {
+  color: var(--text);
+  font-size: 0.62rem;
+  font-weight: 500;
 }
 
-.ribbon-change.is-down {
-  color: var(--negative);
+.tradingview-loading.is-hidden {
+  display: none;
 }
 
-.ribbon-change.is-warning {
-  color: var(--warning);
-}
-
-.ribbon-change.is-neutral {
-  color: var(--neutral);
+.tradingview-attribution {
+  position: absolute;
+  right: 0;
+  bottom: 1px;
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 0.54rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 .top-console {
@@ -1101,10 +1080,6 @@ a {
     padding: 10px 10px 20px;
   }
 
-  .ribbon-item {
-    flex-basis: 250px;
-  }
-
   .inventory-grid,
   .buffer-metrics {
     grid-template-columns: 1fr;
@@ -1145,8 +1120,14 @@ a {
     flex-direction: column;
   }
 
-  .ribbon-item {
-    flex-basis: 100%;
+  .tradingview-loading {
+    gap: 8px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .tradingview-loading::-webkit-scrollbar {
+    display: none;
   }
 
   .live-clocks-grid {

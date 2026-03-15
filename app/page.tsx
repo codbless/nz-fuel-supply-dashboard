@@ -1,5 +1,6 @@
 import AutoRefresh from "../components/AutoRefresh";
 import LiveClocks from "../components/LiveClocks";
+import TradingViewTickerTape from "../components/TradingViewTickerTape";
 import { getPumpWatchDashboardData } from "../lib/pump-watch/dashboard";
 
 type SignalTone = "up" | "down" | "warning" | "flat";
@@ -278,13 +279,6 @@ function statusLabel(status: SignalTone) {
   return "FLAT";
 }
 
-function priceDirection(status: SignalTone) {
-  if (status === "down") return "▼";
-  if (status === "up") return "▲";
-  if (status === "warning") return "■";
-  return "•";
-}
-
 export default async function HomePage() {
   const pumpWatchData = await getPumpWatchDashboardData();
   const screenSnapshot = formatScreenSnapshot();
@@ -297,27 +291,12 @@ export default async function HomePage() {
         <header className="top-strip panel">
           <div className="market-ribbon">
             <div className="ribbon-label-block">
-              <span className="brand-code">LIVE MKT</span>
+              <span className="brand-code">TRADINGVIEW</span>
               <strong className="ribbon-heading">{screenSnapshot}</strong>
             </div>
 
-            <div className="market-ribbon-track" aria-label="Global market ticker">
-              {markets.map((market) => (
-                <article className="ribbon-item" key={market.code}>
-                  <div className="ribbon-symbol">
-                    <span className="ticker-code">{market.code}</span>
-                    <span className="ribbon-name">{market.name}</span>
-                  </div>
-                  <div className="ribbon-quote">
-                    <strong className="ribbon-last">{market.value}</strong>
-                    <span className="ribbon-unit">{market.unit}</span>
-                  </div>
-                  <span className={`ribbon-change ${statusClass(market.status)}`}>
-                    <span aria-hidden="true">{priceDirection(market.status)}</span>
-                    {market.change}
-                  </span>
-                </article>
-              ))}
+            <div className="market-ribbon-widget" aria-label="Live market ticker">
+              <TradingViewTickerTape />
             </div>
           </div>
 
