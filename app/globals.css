@@ -241,11 +241,18 @@ a {
   padding: 6px 0 16px;
 }
 
-.tradingview-widget-container {
+.tradingview-tape-element {
+  display: block;
+  min-width: 0;
   min-height: 32px;
+  color-scheme: dark;
+  --tv-widget-background-color: transparent;
+  --tv-widget-pane-border-color: transparent;
+  --tv-widget-symbol-color: #f4f7fb;
+  --tv-widget-text-color: #8b92a1;
 }
 
-.tradingview-widget-container__widget {
+.tradingview-tape-element:defined {
   min-height: 32px;
 }
 
@@ -262,14 +269,14 @@ a {
   white-space: nowrap;
 }
 
+.tradingview-loading.is-error {
+  color: var(--negative);
+}
+
 .tradingview-loading strong {
   color: var(--text);
   font-size: 0.62rem;
   font-weight: 500;
-}
-
-.tradingview-loading.is-hidden {
-  display: none;
 }
 
 .tradingview-attribution {

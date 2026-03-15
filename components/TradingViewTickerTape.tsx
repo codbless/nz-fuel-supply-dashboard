@@ -1,81 +1,53 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import Script from "next/script";
+import { createElement, useState } from "react";
 
-const widgetScriptSrc =
-  "https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js";
+const widgetScriptSrc = "https://www.tradingview-widget.com/w/en/tv-ticker-tape.js";
 
-const tickerConfig = {
-  symbols: [
-    {
-      description: "OIL_BRENT",
-      proName: "TVC:UKOIL",
-    },
-    {
-      description: "USOIL",
-      proName: "TVC:USOIL",
-    },
-    {
-      description: "USDNZD",
-      proName: "FX_IDC:USDNZD",
-    },
-  ],
-  showSymbolLogo: false,
-  colorTheme: "dark",
-  isTransparent: true,
-  displayMode: "compact",
-  locale: "en",
-};
+const tickerSymbols = ["OIL_BRENT", "USOIL", "USDNZD"];
 
 export default function TradingViewTickerTape() {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [isReady, setIsReady] = useState(false);
-
-  useEffect(() => {
-    const container = containerRef.current;
-
-    if (!container) {
-      return;
-    }
-
-    setIsReady(false);
-    container.innerHTML = "";
-
-    const widgetRoot = document.createElement("div");
-    widgetRoot.className = "tradingview-widget-container__widget";
-    container.appendChild(widgetRoot);
-
-    const script = document.createElement("script");
-    script.src = widgetScriptSrc;
-    script.type = "text/javascript";
-    script.async = true;
-    script.innerHTML = JSON.stringify(tickerConfig);
-    script.onload = () => setIsReady(true);
-    script.onerror = () => setIsReady(false);
-    container.appendChild(script);
-
-    return () => {
-      container.innerHTML = "";
-    };
-  }, []);
+  const [hasScriptError, setHasScriptError] = useState(false);
 
   return (
     <div className="tradingview-ticker">
-      <div
-        className={`tradingview-loading ${isReady ? "is-hidden" : ""}`}
-        aria-hidden={isReady}
-      >
-        <span>OIL_BRENT</span>
-        <span>USOIL</span>
-        <span>USDNZD</span>
-        <strong>Connecting live market feed...</strong>
-      </div>
+      <Script
+        id="tradingview-ticker-tape"
+        src={widgetScriptSrc}
+        strategy="afterInteractive"
+        type="module"
+        onReady={() => setHasScriptError(false)}
+        onError={() => setHasScriptError(true)}
+      />
 
-      <div ref={containerRef} className="tradingview-widget-container" />
+      {createElement(
+        "tv-ticker-tape",
+        {
+          className: "tradingview-tape-element",
+          symbols: tickerSymbols.join(","),
+          theme: "dark",
+          transparent: "",
+          "item-size": "compact",
+        },
+        <div
+          className={`tradingview-loading ${hasScriptError ? "is-error" : ""}`}
+          aria-live="polite"
+        >
+          {tickerSymbols.map((symbol) => (
+            <span key={symbol}>{symbol}</span>
+          ))}
+          <strong>
+            {hasScriptError
+              ? "Live market feed unavailable."
+              : "Connecting live market feed..."}
+          </strong>
+        </div>,
+      )}
 
       <a
         className="tradingview-attribution"
-        href="https://www.tradingview.com/markets/?utm_source=nz-fuel-supply-dashboard&utm_medium=widget&utm_campaign=ticker_tape"
+        href="https://www.tradingview.com/widget-docs/widgets/tickers/ticker-tape/"
         rel="noopener noreferrer nofollow"
         target="_blank"
       >
