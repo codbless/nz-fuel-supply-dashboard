@@ -2,6 +2,12 @@
 
 First working version of a Bloomberg-style fuel supply dashboard for New Zealand, built with Next.js for Vercel deployment.
 
+## Repository Scope
+
+This repository is dedicated to fuel, oil, tanker, and pump-price monitoring only.
+
+It is intentionally separate from `codbless/nzred-dashboard`, which remains focused on NZRed seafood operations. Dependencies, environment variables, and deployment configuration should stay isolated between the two projects.
+
 ## Pump Watch pipeline
 
 NZ Pump Watch no longer needs manual city-by-city editing in code.
